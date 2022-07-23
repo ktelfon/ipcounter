@@ -12,7 +12,12 @@ public class UniqIpPicker {
         this.ipCounter = new IpCounter();
     }
 
-    public long pickUniqIpsFromFile(String fileName) throws IOException {
+    public long pickUniqIpsFromFile(String fileName) {
+
+        if(fileName == null || fileName.length() == 0){
+            System.out.println(" no file name provided");
+            return 0;
+        }
         Class clazz = UniqIpPicker.class;
         InputStream inputStream = clazz.getResourceAsStream("/" + fileName);
 
@@ -28,5 +33,13 @@ public class UniqIpPicker {
                     + " uniq Ip's");
             return uniqIpCounter;
         }
+    }
+
+    public IpCounter getIpCounter() {
+        return ipCounter;
+    }
+
+    public void setIpCounter(IpCounter ipCounter) {
+        this.ipCounter = ipCounter;
     }
 }
