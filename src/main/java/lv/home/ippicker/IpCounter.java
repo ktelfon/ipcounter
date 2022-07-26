@@ -45,16 +45,17 @@ public class IpCounter {
     }
 
     static long toLongValue(String ipString) {
-        StringBuilder field = new StringBuilder(3);
+        int ipArrayIndex = 3;
+        StringBuilder field = new StringBuilder(ipArrayIndex);
         int startIndex = 0;
         long result = 0;
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < ipArrayIndex; i++) {
             int spacerPosition = ipString.indexOf('.', startIndex);
             field.append(ipString, startIndex, spacerPosition);
             int fieldValue = Integer.parseInt(field.toString());
             field.setLength(0);
-            result += fieldValue * Math.pow(256, 3 - i);
+            result += fieldValue * Math.pow(256, ipArrayIndex - i);
             startIndex = spacerPosition + 1;
         }
         result += Integer.parseInt(ipString.substring(startIndex));
