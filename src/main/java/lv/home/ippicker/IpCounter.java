@@ -21,6 +21,8 @@ public class IpCounter {
     private BitSet smallIpBitset;
     private BitSet bigIpBitSet;
 
+    private Pattern ipPattern = Pattern.compile(IP_REGEX);
+
     public IpCounter() {
         this.smallIpBitset = new BitSet();
         this.bigIpBitSet = new BitSet();
@@ -28,6 +30,7 @@ public class IpCounter {
     }
 
     public void countIp(String ip) {
+
         if (isIpInValid(ip)) return;
         BitSet pickedBitset = smallIpBitset;
         long ipIndex = toLongValue(ip);
@@ -63,17 +66,13 @@ public class IpCounter {
         if (ip == null) {
             return true;
         }
-        Pattern p = Pattern.compile(IP_REGEX);
-        Matcher m = p.matcher(ip);
 
-        if (!m.matches()) {
+        Matcher ipPatternMatcher = ipPattern.matcher(ip);
+
+        if (!ipPatternMatcher.matches()) {
             return true;
         }
         return false;
-    }
-
-    private static Integer getSmallIpIndexNumber(String[] ipParts) {
-        return Integer.valueOf(Integer.parseInt(ipParts[0]) - 100 + ipParts[1] + ipParts[2] + ipParts[3]);
     }
 
     public long getUniqIpCounter() {
