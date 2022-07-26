@@ -37,10 +37,6 @@ public class UniqIpPicker {
         }
     }
 
-    public IpCounter getIpCounter() {
-        return ipCounter;
-    }
-
     public void setIpCounter(IpCounter ipCounter) {
         this.ipCounter = ipCounter;
     }
