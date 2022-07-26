@@ -18,21 +18,21 @@ public class IpCounter {
 
     private long uniqIpCounter;
 
-    private BitSet bitSet1;
-    private BitSet bitSet2;
+    private BitSet smallIpBitset;
+    private BitSet bigIpBitSet;
 
     public IpCounter() {
-        this.bitSet1 = new BitSet();
-        this.bitSet2 = new BitSet();
+        this.smallIpBitset = new BitSet();
+        this.bigIpBitSet = new BitSet();
         uniqIpCounter = 0;
     }
 
     public void countIp(String ip) {
         if (isIpInValid(ip)) return;
-        BitSet pickedBitset = bitSet1;
+        BitSet pickedBitset = smallIpBitset;
         long ipIndex = toLongValue(ip);
         if (ipIndex > Integer.MAX_VALUE) {
-            pickedBitset = bitSet2;
+            pickedBitset = bigIpBitSet;
             ipIndex = (ipIndex - Integer.MAX_VALUE);
         }
         if (!pickedBitset.get((int) ipIndex - 1)) {
