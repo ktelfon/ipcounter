@@ -6,8 +6,6 @@ import java.util.regex.Pattern;
 
 public class IpCounter {
 
-    private long uniqIpCounter;
-    // Regex for digit from 0 to 255.
     public static final String ZERO_TO_255_REGEX
             = "(\\d{1,2}|(0|1)\\"
             + "d{2}|2[0-4]\\d|25[0-5])";
@@ -17,6 +15,8 @@ public class IpCounter {
             + ZERO_TO_255_REGEX + "\\."
             + ZERO_TO_255_REGEX + "\\."
             + ZERO_TO_255_REGEX;
+
+    private long uniqIpCounter;
 
     private BitSet bitSet1;
     private BitSet bitSet2;
@@ -35,9 +35,9 @@ public class IpCounter {
             pickedBitset = bitSet2;
             ipIndex = (ipIndex - Integer.MAX_VALUE);
         }
-        if (!pickedBitset.get((int) ipIndex-1)) {
+        if (!pickedBitset.get((int) ipIndex - 1)) {
             uniqIpCounter++;
-            pickedBitset.set((int) ipIndex-1);
+            pickedBitset.set((int) ipIndex - 1);
         }
     }
 
@@ -72,12 +72,12 @@ public class IpCounter {
         return false;
     }
 
-    public long getUniqIpCounter() {
-        return uniqIpCounter;
-    }
-
     private static Integer getSmallIpIndexNumber(String[] ipParts) {
         return Integer.valueOf(Integer.parseInt(ipParts[0]) - 100 + ipParts[1] + ipParts[2] + ipParts[3]);
+    }
+
+    public long getUniqIpCounter() {
+        return uniqIpCounter;
     }
 
 }
