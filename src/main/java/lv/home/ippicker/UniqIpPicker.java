@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.NoSuchFileException;
 
 public class UniqIpPicker {
     private IpCounter ipCounter;
@@ -12,11 +13,10 @@ public class UniqIpPicker {
         this.ipCounter = new IpCounter();
     }
 
-    public long pickUniqIpsFromFile(String fileName) {
+    public long pickUniqIpsFromFile(String fileName) throws NoSuchFileException {
 
         if (fileName == null || fileName.length() == 0) {
-            System.out.println(" no file name provided");
-            return 0;
+            throw new NoSuchFileException(" no file name provided");
         }
         Class clazz = UniqIpPicker.class;
         InputStream inputStream = clazz.getResourceAsStream("/" + fileName);
