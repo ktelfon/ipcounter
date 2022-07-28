@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        UniqIpPicker uniqIpPicker = new UniqIpPicker();
+        UniqIpPicker uniqIpPicker = new UniqIpPicker(new IpCounter());
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter your file name and path:");
         String input = scanner.next();
