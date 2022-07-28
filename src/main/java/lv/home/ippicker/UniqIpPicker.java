@@ -1,31 +1,27 @@
 package lv.home.ippicker;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.NoSuchFileException;
 
 public class UniqIpPicker {
+    public static final String NO_FILE_NAME_PROVIDED = "No file name provided";
     private IpCounter ipCounter;
 
-    public UniqIpPicker() {
-        this.ipCounter = new IpCounter();
+    public UniqIpPicker(IpCounter ipCounter) {
+        this.ipCounter = ipCounter;
     }
 
-    public long pickUniqIpsFromFile(String fileName) {
+    public long pickUniqIpsFromFile(String fileName) throws NoSuchFileException {
 
-        if(fileName == null || fileName.length() == 0){
-            System.out.println(" no file name provided");
-            return 0;
-        }
-        Class clazz = UniqIpPicker.class;
-        InputStream inputStream = clazz.getResourceAsStream("/" + fileName);
+        validateFileName(fileName);
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
                 ipCounter.countIp(line);
             }
+        } catch (IOException e) {
+            System.out.println("Ups something went wrong with the file");
         } finally {
             long uniqIpCounter = ipCounter.getUniqIpCounter();
             System.out.println("Found: "
@@ -35,11 +31,9 @@ public class UniqIpPicker {
         }
     }
 
-    public IpCounter getIpCounter() {
-        return ipCounter;
-    }
-
-    public void setIpCounter(IpCounter ipCounter) {
-        this.ipCounter = ipCounter;
+    private static void validateFileName(String fileName) throws NoSuchFileException {
+        if (fileName == null || fileName.length() == 0) {
+            throw new NoSuchFileException(NO_FILE_NAME_PROVIDED);
+        }
     }
 }

@@ -4,6 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.nio.file.NoSuchFileException;
+
+import static lv.home.ippicker.UniqIpPicker.NO_FILE_NAME_PROVIDED;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -16,21 +19,26 @@ class UniqIpPickerTest {
 
     @BeforeEach
     void setUp() {
-        uniqIpPicker = new UniqIpPicker();
-        uniqIpPicker.setIpCounter(ipCounter);
+        uniqIpPicker = new UniqIpPicker(ipCounter);
         when(ipCounter.getUniqIpCounter()).thenReturn(amountOfIps);
 
     }
 
     @Test
-    void readsFile() {
-        uniqIpPicker.pickUniqIpsFromFile(fileName);
-        assertEquals(amountOfIps, uniqIpPicker.getIpCounter());
+    void readsFile() throws NoSuchFileException {
+        long result = uniqIpPicker.pickUniqIpsFromFile(fileName);
+        assertEquals(amountOfIps, result);
     }
 
     @Test
-    void noFileTest() {
-        int expected = 0;
-        assertEquals(expected, uniqIpPicker.pickUniqIpsFromFile(null));
+    void noFileTest()  {
+        Exception exception = assertThrows(NoSuchFileException.class, () -> {
+            uniqIpPicker.pickUniqIpsFromFile(null);
+        });
+
+        String expectedMessage = NO_FILE_NAME_PROVIDED;
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 }

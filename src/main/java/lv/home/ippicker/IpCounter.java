@@ -6,8 +6,6 @@ import java.util.regex.Pattern;
 
 public class IpCounter {
 
-    private long uniqIpCounter;
-    // Regex for digit from 0 to 255.
     public static final String ZERO_TO_255_REGEX
             = "(\\d{1,2}|(0|1)\\"
             + "d{2}|2[0-4]\\d|25[0-5])";
@@ -18,40 +16,46 @@ public class IpCounter {
             + ZERO_TO_255_REGEX + "\\."
             + ZERO_TO_255_REGEX;
 
-    private BitSet bitSet1;
-    private BitSet bitSet2;
+    private long uniqIpCounter;
+
+    private BitSet smallIpBitset;
+    private BitSet bigIpBitSet;
+
+    private Pattern ipPattern = Pattern.compile(IP_REGEX);
 
     public IpCounter() {
-        this.bitSet1 = new BitSet();
-        this.bitSet2 = new BitSet();
+        this.smallIpBitset = new BitSet();
+        this.bigIpBitSet = new BitSet();
         uniqIpCounter = 0;
     }
 
     public void countIp(String ip) {
+
         if (isIpInValid(ip)) return;
-        BitSet pickedBitset = bitSet1;
+        BitSet pickedBitset = smallIpBitset;
         long ipIndex = toLongValue(ip);
         if (ipIndex > Integer.MAX_VALUE) {
-            pickedBitset = bitSet2;
+            pickedBitset = bigIpBitSet;
             ipIndex = (ipIndex - Integer.MAX_VALUE);
         }
-        if (!pickedBitset.get((int) ipIndex-1)) {
+        if (!pickedBitset.get((int) ipIndex - 1)) {
             uniqIpCounter++;
-            pickedBitset.set((int) ipIndex-1);
+            pickedBitset.set((int) ipIndex - 1);
         }
     }
 
     static long toLongValue(String ipString) {
-        StringBuilder field = new StringBuilder(3);
+        int ipArrayIndex = 3;
+        StringBuilder field = new StringBuilder(ipArrayIndex);
         int startIndex = 0;
         long result = 0;
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < ipArrayIndex; i++) {
             int spacerPosition = ipString.indexOf('.', startIndex);
             field.append(ipString, startIndex, spacerPosition);
             int fieldValue = Integer.parseInt(field.toString());
             field.setLength(0);
-            result += fieldValue * Math.pow(256, 3 - i);
+            result += fieldValue * Math.pow(256, ipArrayIndex - i);
             startIndex = spacerPosition + 1;
         }
         result += Integer.parseInt(ipString.substring(startIndex));
@@ -63,10 +67,10 @@ public class IpCounter {
         if (ip == null) {
             return true;
         }
-        Pattern p = Pattern.compile(IP_REGEX);
-        Matcher m = p.matcher(ip);
 
-        if (!m.matches()) {
+        Matcher ipPatternMatcher = ipPattern.matcher(ip);
+
+        if (!ipPatternMatcher.matches()) {
             return true;
         }
         return false;
@@ -74,10 +78,6 @@ public class IpCounter {
 
     public long getUniqIpCounter() {
         return uniqIpCounter;
-    }
-
-    private static Integer getSmallIpIndexNumber(String[] ipParts) {
-        return Integer.valueOf(Integer.parseInt(ipParts[0]) - 100 + ipParts[1] + ipParts[2] + ipParts[3]);
     }
 
 }
